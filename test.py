@@ -29,19 +29,22 @@ while True:
         search_box = browser.find_element(By.ID, 'searchInput')
         search_box.send_keys(request)
         search_box.send_keys(Keys.RETURN)
-        print("Заголовок статьи", get_article_title(browser.current_url))
+        time.sleep(3)
+        print("Заголовок статьи:", get_article_title(browser.current_url))
 
         while True:
-            print("\n1. Листать параграфы с этой статьи. \n2. Перейти на одну из связанных ссылок. \n3. Выйти\n")
+            print("\n1. Листать параграфы с этой статьи. \n2. Перейти на одну из связанных ссылок. \n3. Выйти")
             choice = input("Введите ваш выбор: ").strip()
             if choice == '1':
                 print("Пожалуйста, подождите...\n")
                 paragraphs = browser.find_elements(By.TAG_NAME, 'p')
                 for paragraph in paragraphs:
                     print(paragraph.text)
-                    print("\n1. Продолжить листание параграфов\n2. Перейти на одну из ссылок в этом параграфе\n3. Выйти\n")
+                    print("\n1. Продолжить листание параграфов\n2. Перейти на одну из ссылок в этом параграфе\n3. Выйти")
                     action = input("Введите ваш выбор: ").strip()
-                    if action == '1':
+                    if action == '':
+                        print("Ошибка: Пустой ввод не допускается.")
+                    elif action == '1':
                         continue
                     elif action == '2':
                         print("Пожалуйста, подождите...\n")
@@ -51,14 +54,16 @@ while True:
                             print("Не удалось найти ссылки в этом параграфе.")
                             continue
 
-                        print("Список ссылок в этом параграфе:\n")
+                        print("Список ссылок в этом параграфе:")
                         for i, link in enumerate(valid_links):
                             link_url = link.get_attribute('href')
                             link_title = get_article_title(link_url)
                             print(f"{i + 1}. {link_title} - {link_url}")
 
-                        link_choice = input("Введите номер ссылки для перехода или 'n' для остановки: \n").strip()
-                        if link_choice.lower() == 'n':
+                        link_choice = input("Введите номер ссылки для перехода или 'n' для остановки: ").strip()
+                        if link_choice == '':
+                            print("Ошибка: Пустой ввод не допускается.")
+                        elif link_choice.lower() == 'n':
                             continue
                         else:
                             print("Пожалуйста, подождите...\n")
